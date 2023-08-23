@@ -1,0 +1,15 @@
+{
+    "name": "zomat/php-genetics",
+    "autoload": {
+        "psr-4": {
+            "Zomat\\PhpGenetics\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Zomat",
+            "email": "mateusz.zolisz@gmail.com"
+        }
+    ],
+    "require": {}
+}
