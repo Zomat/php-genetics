@@ -59,11 +59,11 @@ for ($i = 0; $i < $generationLimit; $i++) {
     for ($j = 0; $j < (count($population->genomes) / 2) - 1; $j++) {
         $parents = $selectionService->getSelectionPair($population);
 
-        $offspring = $genomeService->singlePointCrossover($parents->genomes[0], $parents->genomes[1]);
+        $offspring = $genomeService->singlePointCrossover($parents->genome1, $parents->genome2);
         
         $nextGeneration = array_merge($nextGeneration, [
-            $genomeService->mutation($offspring[0], 1),
-            $genomeService->mutation($offspring[1], 1),
+            $genomeService->mutation($offspring->genome1, 1),
+            $genomeService->mutation($offspring->genome2, 1),
         ]);
     }
 

@@ -12,7 +12,7 @@ class SelectionService
         private FitnessService $fitnessService
     ) {}
 
-    public function getSelectionPair(Population $population) : Population
+    public function getSelectionPair(Population $population) : GenomePair
     {
         $weights = array();
         
@@ -26,10 +26,10 @@ class SelectionService
             $index2 = $this->getBucketFromWeights($weights);
         } while ($index1 != $index2);
        
-        return new Population([
+        return new GenomePair(
             $population->genomes[$index1],
             $population->genomes[$index2]
-        ]);
+        );
     }
 
     private function getBucketFromWeights(array $values) {

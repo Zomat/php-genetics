@@ -32,7 +32,7 @@ class GenomeService
         return $genome;
     }
 
-    public function singlePointCrossover(Genome $genome1, Genome $genome2) : array
+    public function singlePointCrossover(Genome $genome1, Genome $genome2) : GenomePair
     {
         if ($genome1->getLength() != $genome2->getLength()) {
             throw new \Exception("Genomes 1 and 2 must be of the same length");
@@ -40,10 +40,10 @@ class GenomeService
 
         $p = rand(1, $genome1->getLength() - 1);
 
-        return [
+        return new GenomePair(
             new Genome(array_merge(array_slice($genome1->get(), 0, $p), array_slice($genome2->get(), $p))),
             new Genome(array_merge(array_slice($genome2->get(), 0, $p), array_slice($genome1->get(), $p))),
-        ];
+        );
     }
 
     public function toItemNames(Genome $genome, array $items) : string
