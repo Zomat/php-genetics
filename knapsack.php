@@ -5,13 +5,17 @@ declare(strict_types=1);
 require_once __DIR__ . '/vendor/autoload.php';
 
 use Zomat\PhpGenetics\Item;
-use Zomat\PhpGenetics\GenomeService;
-use Zomat\PhpGenetics\FitnessService;
-use Zomat\PhpGenetics\Population;
-use Zomat\PhpGenetics\PopulationService;
-use Zomat\PhpGenetics\SelectionService;
+use Zomat\PhpGenetics\GeneticsAlgorithmBuilder;
 
-$items = [
+$gaBuilder = new GeneticsAlgorithmBuilder;
+
+$gaBuilder->setGenerationLimit(1000)
+->setFitnessLimit(null)
+->setPopulationSize(10)
+->setElitarism(true)
+->setWeightLimit(3000);
+
+$gaBuilder->setItems(
     new Item('Laptop', 500, 2200),
     new Item('Headphones', 150, 160),
     new Item('Mug', 150, 350),
@@ -22,62 +26,18 @@ $items = [
     new Item('Tissues', 15, 80),
     new Item('Phone', 500, 200),
     new Item('Baseball Cap', 100, 70),
-];
+);
 
-$generationLimit = 1000;
-$fitnessLimit = null;
-
-$genomeService = new GenomeService;
-$fitnessService = new FitnessService(items: $items, weightLimit: 3000);
-$populationService = new PopulationService($fitnessService);
-$selectionService = new SelectionService($fitnessService);
-
-/**
- * Run evolution
- */
-$population = $populationService->generate(10, count($items));
-
-$result = $population->genomes[0];
-
-echo "Initial Population: \n";
-echo $genomeService->toItemNames($result, $items);
-echo " => Fitness: " . $fitnessService->getFitness($result) . PHP_EOL;
-
-for ($i = 0; $i < $generationLimit; $i++) {
-    $population = $populationService->sort($population);
-    
-    if (!is_null($fitnessLimit) && $fitnessService->getFitness($population->genomes[0]) >= $fitnessLimit) {
-        break;
-    }
-
-    $nextGeneration = array();
-
-    /** Elitarism */
-    $nextGeneration[] = $population->genomes[0];
-    $nextGeneration[] = $population->genomes[1];
-    
-    for ($j = 0; $j < (count($population->genomes) / 2) - 1; $j++) {
-        $parents = $selectionService->getSelectionPair($population);
-
-        $offspring = $genomeService->singlePointCrossover($parents->genome1, $parents->genome2);
-        
-        $nextGeneration = array_merge($nextGeneration, [
-            $genomeService->mutation($offspring->genome1, 1),
-            $genomeService->mutation($offspring->genome2, 1),
-        ]);
-    }
-
-    $population = new Population($nextGeneration);
+try {
+    $ga = $gaBuilder->build();
+} catch (\Exception $e) {
+    exit("Can't build algorithm: {$e->getMessage()}" . PHP_EOL);
 }
 
-$population = $populationService->sort($population);
-
-/** Result => Genome with best fitness  */
-$result = $population->genomes[0];
+$result = $ga->run();
 
 echo "Result population: " . PHP_EOL;
-
-echo $genomeService->toItemNames($result, $items);
-echo " => Fitness: " . $fitnessService->getFitness($result);
+echo $result->itemNames;
+echo " => Fitness: " . $result->fitness;
 
 echo PHP_EOL;
