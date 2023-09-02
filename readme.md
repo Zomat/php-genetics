@@ -8,7 +8,7 @@ These instructions will help you understand the code and set it up for your own 
 
 ### Prerequisites
 
-- PHP 7.4 or higher
+- PHP 8.1 or higher
 - Composer for dependency management
 
 ### Installation
@@ -33,39 +33,38 @@ composer install
 
 ### Usage
 
-The provided PHP script (`knapsack.php`) demonstrates how to solve the Knapsack Problem using a genetic algorithm. Below is a breakdown of the script's main components and how to use them:
+In the knapsack.php file, you will find an example configuration of the genetic algorithm. You can customize the algorithm parameters and the items placed in the knapsack by modifying the relevant values in the code. Here's an example configuration:
 
-- `Item` class: Represents an item with a name, weight, and value.
+```php
+$gaBuilder = new GeneticsAlgorithmBuilder;
 
-- `GenomeService` class: Handles operations related to genomes, such as crossover and mutation.
+$gaBuilder->setGenerationLimit(1000)
+->setPopulationSize(10)
+->setMutationLimit(1)
+->setMutationProbability(0.5)
+->setElitism(true)
+->setWeightLimit(3000);
 
-- `FitnessService` class: Calculates the fitness of a genome based on the selected items' total value and weight.
+$gaBuilder->setItems(
+    new Item('Laptop', 500, 2200),
+    new Item('Headphones', 150, 160),
+    // Add more items here...
+);
 
-- `Population` class: Represents a population of genomes.
+try {
+    $ga = $gaBuilder->build();
+} catch (\Exception $e) {
+    exit("Can't build algorithm: {$e->getMessage()}" . PHP_EOL);
+}
 
-- `PopulationService` class: Generates and manages populations.
+$result = $ga->run();
 
-- `SelectionService` class: Handles selection of parent genomes for crossover.
+echo "Result population: " . PHP_EOL;
+echo $result->itemNames . PHP_EOL;
+echo " => Fitness: " . $result->fitness . PHP_EOL;
+echo " => Generation: " . $result->generation . PHP_EOL;
 
-- The script starts by defining a set of items, each with a name, weight, and value.
-
-- The genetic algorithm parameters (`$generationLimit` and `$fitnessLimit`) are set.
-
-- The main loop runs for a specified number of generations (`$generationLimit`). In each iteration, the population is sorted based on fitness.
-
-- Elitism is applied by selecting the top two genomes from the population to carry over to the next generation.
-
-- For the remaining genomes, parent genomes are selected using a selection mechanism. Single-point crossover is applied to create offspring genomes, which are then mutated.
-
-- The new population is constructed from the elite genomes, offspring, and mutations.
-
-- The process continues until the specified generation limit is reached or a fitness limit is achieved.
-
-- The final population is sorted, and the genome with the best fitness is selected as the result.
-
-- The result, along with its fitness, is printed to the console.
-
-To run the genetic algorithm, execute the script in your terminal:
+```
 
 ```bash
 php knapsack.php
@@ -77,4 +76,4 @@ Feel free to contribute by opening issues or submitting pull requests. Your cont
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the MIT License.
