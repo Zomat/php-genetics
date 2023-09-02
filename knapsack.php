@@ -17,7 +17,7 @@ $gaBuilder->setGenerationLimit(1000)
 ->setWeightLimit(3000)
 ->setElitarism(true);
 
-$gaBuilder->setItems(
+$items = [
     new Item('Laptop', 500, 2200),
     new Item('Headphones', 150, 160),
     new Item('Mug', 150, 350),
@@ -28,6 +28,10 @@ $gaBuilder->setItems(
     new Item('Tissues', 15, 80),
     new Item('Phone', 500, 200),
     new Item('Baseball Cap', 100, 70),
+];
+
+$gaBuilder->setItems(
+    $items
 );
 
 try {

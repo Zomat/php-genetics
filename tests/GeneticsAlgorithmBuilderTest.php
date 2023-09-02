@@ -17,7 +17,7 @@ class GeneticsAlgorithmBuilderTest extends TestCase
         $builder->setGenerationLimit(100)
             ->setWeightLimit(1000)
             ->setPopulationSize(50)
-            ->setItems(new Item("Item A", 10, 20), new Item("Item B", 20, 30));
+            ->setItems([new Item("Item A", 10, 20), new Item("Item B", 20, 30)]);
 
         // Build the GeneticsAlgorithm instance
         $algorithm = $builder->build();
@@ -35,7 +35,7 @@ class GeneticsAlgorithmBuilderTest extends TestCase
         // Set other required properties but omit weightLimit
         $builder->setGenerationLimit(100)
             ->setPopulationSize(50)
-            ->setItems(new Item("Item A", 10, 20), new Item("Item B", 20, 30));
+            ->setItems([new Item("Item A", 10, 20), new Item("Item B", 20, 30)]);
 
         // Attempt to build without setting weightLimit
         $this->expectException(\InvalidArgumentException::class);
@@ -53,7 +53,7 @@ class GeneticsAlgorithmBuilderTest extends TestCase
             ->setWeightLimit(1000)
             ->setPopulationSize(50)
             ->setMutationLimit(3) // Set a high mutation limit
-            ->setItems(new Item("Item A", 10, 20), new Item("Item B", 20, 30));
+            ->setItems([new Item("Item A", 10, 20), new Item("Item B", 20, 30)]);
 
         // Attempt to build with an invalid mutation limit
         $this->expectException(\InvalidArgumentException::class);
@@ -71,7 +71,7 @@ class GeneticsAlgorithmBuilderTest extends TestCase
             ->setWeightLimit(1000)
             ->setPopulationSize(50)
             ->setMutationProbability(1.5) // Set an invalid mutation probability
-            ->setItems(new Item("Item A", 10, 20), new Item("Item B", 20, 30));
+            ->setItems([new Item("Item A", 10, 20), new Item("Item B", 20, 30)]);
 
         // Attempt to build with an invalid mutation probability
         $this->expectException(\InvalidArgumentException::class);

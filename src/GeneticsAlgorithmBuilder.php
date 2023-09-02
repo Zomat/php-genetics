@@ -70,7 +70,7 @@ class GeneticsAlgorithmBuilder
         return $this;
     }
 
-    public function setItems(Item ...$items): GeneticsAlgorithmBuilder
+    public function setItems(array $items): GeneticsAlgorithmBuilder
     {
         $this->items = $items;
         return $this;
