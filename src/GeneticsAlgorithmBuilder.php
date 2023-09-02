@@ -3,12 +3,22 @@
 declare(strict_types=1);
 
 namespace Zomat\PhpGenetics;
+use Zomat\PhpGenetics\Services\FitnessService;
+use Zomat\PhpGenetics\Services\GenomeService;
+use Zomat\PhpGenetics\Services\PopulationService;
+use Zomat\PhpGenetics\Services\SelectionService;
+use Zomat\PhpGenetics\ValueObjects\GeneticsAlgorithmConfig;
+use Zomat\PhpGenetics\ValueObjects\Item;
 
 class GeneticsAlgorithmBuilder
 {
     private int $generationLimit;
 
     private ?int $fitnessLimit = null;
+
+    private ?int $mutationLimit = 1;
+
+    private ?float $mutationProbability = 0.5;
 
     private int $weightLimit;
 
@@ -20,25 +30,37 @@ class GeneticsAlgorithmBuilder
 
     public function setGenerationLimit(int $limit): GeneticsAlgorithmBuilder
     {
-        $this->generationLimit = $limit;
+        $this->generationLimit = abs($limit);
         return $this;
     }
 
-    public function setFitnessLimit(?int $limit): GeneticsAlgorithmBuilder
+    public function setFitnessLimit(int $limit): GeneticsAlgorithmBuilder
     {
-        $this->fitnessLimit = $limit;
+        $this->fitnessLimit = abs($limit);
         return $this;
     }
 
     public function setWeightLimit(int $limit): GeneticsAlgorithmBuilder
     {
-        $this->weightLimit = $limit;
+        $this->weightLimit = abs($limit);
+        return $this;
+    }
+
+    public function setMutationLimit(int $limit): GeneticsAlgorithmBuilder
+    {
+        $this->mutationLimit = abs($limit);
+        return $this;
+    }
+
+    public function setMutationProbability(float $value): GeneticsAlgorithmBuilder
+    {
+        $this->mutationProbability = abs($value);
         return $this;
     }
 
     public function setPopulationSize(int $size): GeneticsAlgorithmBuilder
     {
-        $this->populationSize = $size;
+        $this->populationSize = abs($size);
         return $this;
     }
 
@@ -56,6 +78,10 @@ class GeneticsAlgorithmBuilder
 
     public function build(): GeneticsAlgorithm
     {
+        if (empty($this->items)) {
+            throw new \InvalidArgumentException("Items must be set.");
+        }
+
         if (! isset($this->generationLimit) || $this->generationLimit === null) {
             throw new \InvalidArgumentException("Generation limit must be set.");
         }
@@ -63,9 +89,13 @@ class GeneticsAlgorithmBuilder
         if (! isset($this->weightLimit) || $this->weightLimit === null) {
             throw new \InvalidArgumentException("Weight limit must be set.");
         }
-    
-        if (empty($this->items)) {
-            throw new \InvalidArgumentException("Items must be set.");
+
+        if (isset($this->mutationLimit) && $this->mutationLimit > count($this->items)) {
+            throw new \InvalidArgumentException("Mutation limit can't be higher than item count.");
+        }
+
+        if (isset($this->mutationProbability) && $this->mutationProbability > 1) {
+            throw new \InvalidArgumentException("Mutation probability can't be higher than 1.");
         }
 
         $config = new GeneticsAlgorithmConfig(
@@ -76,14 +106,20 @@ class GeneticsAlgorithmBuilder
             elitarism: $this->elitarism,
         );
 
-        $fitnessService = new FitnessService($this->items, $config->weightLimit);
+        $fitnessService = (new FitnessService())
+            ->setItems($this->items)
+            ->setWeightLimit($this->weightLimit);
+
+        $genomeService = (new GenomeService())
+            ->setMutationLimit($this->mutationLimit)
+            ->setMutationProbability($this->mutationProbability);
 
         return new GeneticsAlgorithm(
             config: $config,
             items: $this->items,
             fitnessService: $fitnessService,
-            genomeService: new GenomeService,
-            populationService: new PopulationService($fitnessService),
+            genomeService: $genomeService,
+            populationService: new PopulationService($fitnessService, $genomeService),
             selectionService: new SelectionService($fitnessService),
         );
     }

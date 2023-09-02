@@ -4,16 +4,18 @@ declare(strict_types=1);
 
 require_once __DIR__ . '/vendor/autoload.php';
 
-use Zomat\PhpGenetics\Item;
+use Zomat\PhpGenetics\ValueObjects\Item;
 use Zomat\PhpGenetics\GeneticsAlgorithmBuilder;
 
 $gaBuilder = new GeneticsAlgorithmBuilder;
 
 $gaBuilder->setGenerationLimit(1000)
-->setFitnessLimit(null)
 ->setPopulationSize(10)
+->setMutationLimit(1)
+->setMutationProbability(0.5)
 ->setElitarism(true)
-->setWeightLimit(3000);
+->setWeightLimit(3000)
+->setElitarism(true);
 
 $gaBuilder->setItems(
     new Item('Laptop', 500, 2200),
@@ -37,7 +39,6 @@ try {
 $result = $ga->run();
 
 echo "Result population: " . PHP_EOL;
-echo $result->itemNames;
-echo " => Fitness: " . $result->fitness;
-
-echo PHP_EOL;
+echo $result->itemNames . PHP_EOL;
+echo " => Fitness: " . $result->fitness . PHP_EOL;
+echo " => Generation: " . $result->generation . PHP_EOL;

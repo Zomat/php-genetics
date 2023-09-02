@@ -68,7 +68,7 @@ The provided PHP script (`knapsack.php`) demonstrates how to solve the Knapsack 
 To run the genetic algorithm, execute the script in your terminal:
 
 ```bash
-php genetic_algorithm.php
+php knapsack.php
 ```
 
 ## Contributing
