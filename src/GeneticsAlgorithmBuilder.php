@@ -3,12 +3,13 @@
 declare(strict_types=1);
 
 namespace Zomat\PhpGenetics;
+use Zomat\PhpGenetics\Contracts\EventBusInterface;
+use Zomat\PhpGenetics\Contracts\EventStackInterface;
 use Zomat\PhpGenetics\Services\FitnessService;
 use Zomat\PhpGenetics\Services\GenomeService;
 use Zomat\PhpGenetics\Services\PopulationService;
 use Zomat\PhpGenetics\Services\SelectionService;
 use Zomat\PhpGenetics\ValueObjects\GeneticsAlgorithmConfig;
-use Zomat\PhpGenetics\ValueObjects\Item;
 
 class GeneticsAlgorithmBuilder
 {
@@ -27,6 +28,10 @@ class GeneticsAlgorithmBuilder
     private bool $elitarism = false;
 
     private array $items;
+
+    public function __construct(
+        private EventBusInterface $eventBus
+    ) {}
 
     public function setGenerationLimit(int $limit): GeneticsAlgorithmBuilder
     {
@@ -106,11 +111,11 @@ class GeneticsAlgorithmBuilder
             elitarism: $this->elitarism,
         );
 
-        $fitnessService = (new FitnessService())
+        $fitnessService = (new FitnessService($this->eventBus))
             ->setItems($this->items)
             ->setWeightLimit($this->weightLimit);
 
-        $genomeService = (new GenomeService())
+        $genomeService = (new GenomeService($this->eventBus))
             ->setMutationLimit($this->mutationLimit)
             ->setMutationProbability($this->mutationProbability);
 
@@ -119,8 +124,9 @@ class GeneticsAlgorithmBuilder
             items: $this->items,
             fitnessService: $fitnessService,
             genomeService: $genomeService,
-            populationService: new PopulationService($fitnessService, $genomeService),
-            selectionService: new SelectionService($fitnessService),
+            populationService: new PopulationService($fitnessService, $genomeService, $this->eventBus),
+            selectionService: new SelectionService($fitnessService, $this->eventBus),
+            eventBus: $this->eventBus
         );
     }
 }

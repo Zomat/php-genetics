@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Zomat\PhpGenetics\Services;
 
+use Zomat\PhpGenetics\Contracts\EventBusInterface;
 use Zomat\PhpGenetics\Contracts\FitnessServiceInterface;
 use Zomat\PhpGenetics\Contracts\GenomeServiceInterface;
 use Zomat\PhpGenetics\Contracts\PopulationServiceInterface;
@@ -13,7 +14,8 @@ final class PopulationService implements PopulationServiceInterface
 {
     public function __construct(
         private FitnessServiceInterface $fitnessService,
-        private GenomeServiceInterface $genomeService
+        private GenomeServiceInterface $genomeService,
+        private EventBusInterface $eventBus
     )
     {}
 

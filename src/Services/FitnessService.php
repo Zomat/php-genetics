@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Zomat\PhpGenetics\Services;
 
+use Zomat\PhpGenetics\Contracts\EventBusInterface;
 use Zomat\PhpGenetics\Contracts\FitnessServiceInterface;
 use Zomat\PhpGenetics\ValueObjects\Genome;
 
@@ -11,6 +12,10 @@ final class FitnessService implements FitnessServiceInterface
 {
     private array $items;
     private int $weightLimit;
+
+    public function __construct(
+        private EventBusInterface $eventBus
+    ) {}
 
     public function setItems(array $items): FitnessServiceInterface
     {

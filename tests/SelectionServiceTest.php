@@ -8,6 +8,7 @@ use Zomat\PhpGenetics\Contracts\FitnessServiceInterface;
 use Zomat\PhpGenetics\ValueObjects\Genome;
 use Zomat\PhpGenetics\ValueObjects\GenomePair;
 use Zomat\PhpGenetics\ValueObjects\Population;
+use Zomat\PhpGenetics\EventBus;
 
 class SelectionServiceTest extends TestCase
 {
@@ -28,7 +29,7 @@ class SelectionServiceTest extends TestCase
                 [$genome3, 4],
             ]);
 
-        $selectionService = new SelectionService($fitnessServiceMock);
+        $selectionService = new SelectionService($fitnessServiceMock, new EventBus);
 
         $selectionPair = $selectionService->getSelectionPair($population);
 

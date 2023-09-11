@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Zomat\PhpGenetics\Services;
 
+use Zomat\PhpGenetics\Contracts\EventBusInterface;
 use Zomat\PhpGenetics\Contracts\FitnessServiceInterface;
 use Zomat\PhpGenetics\Contracts\SelectionServiceInterface;
 use Zomat\PhpGenetics\ValueObjects\GenomePair;
@@ -12,7 +13,8 @@ use Zomat\PhpGenetics\ValueObjects\Population;
 final class SelectionService implements SelectionServiceInterface
 {
     public function __construct(
-        private FitnessServiceInterface $fitnessService
+        private FitnessServiceInterface $fitnessService,
+        private EventBusInterface $eventBus
     ) {}
 
     public function getSelectionPair(Population $population) : GenomePair
@@ -27,8 +29,16 @@ final class SelectionService implements SelectionServiceInterface
 
         do {
             $index2 = $this->getBucketFromWeights($weights);
-        } while ($index1 != $index2);
+        } while ($index1 == $index2);
        
+        $this->eventBus->add([
+            'Selection pair',
+            [
+                'Genome1 index' => $index1,
+                'Genome2 index' => $index2,
+            ]
+        ]);
+
         return new GenomePair(
             $population->genomes[$index1],
             $population->genomes[$index2]

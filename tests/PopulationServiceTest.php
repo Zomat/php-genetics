@@ -9,6 +9,7 @@ use Zomat\PhpGenetics\ValueObjects\Genome;
 use Zomat\PhpGenetics\Contracts\FitnessServiceInterface;
 use Zomat\PhpGenetics\Contracts\GenomeServiceInterface;
 use Zomat\PhpGenetics\ValueObjects\Item;
+use Zomat\PhpGenetics\EventBus;
 
 class PopulationServiceTest extends TestCase
 {
@@ -22,7 +23,7 @@ class PopulationServiceTest extends TestCase
             ->with(5)
             ->willReturn(new Genome([0, 1, 0, 1, 0]));
 
-        $populationService = new PopulationService($fitnessServiceMock, $genomeServiceMock);
+        $populationService = new PopulationService($fitnessServiceMock, $genomeServiceMock, new EventBus);
 
         $population = $populationService->generate(5, 5);
 
@@ -60,7 +61,7 @@ class PopulationServiceTest extends TestCase
 
         $population = new Population([$genome1, $genome2, $genome3]);
 
-        $populationService = new PopulationService($fitnessServiceMock, $genomeServiceMock);
+        $populationService = new PopulationService($fitnessServiceMock, $genomeServiceMock, new EventBus);
 
         $sortedPopulation = $populationService->sort($population);
 

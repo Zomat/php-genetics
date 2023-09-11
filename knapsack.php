@@ -6,8 +6,11 @@ require_once __DIR__ . '/vendor/autoload.php';
 
 use Zomat\PhpGenetics\ValueObjects\Item;
 use Zomat\PhpGenetics\GeneticsAlgorithmBuilder;
+use Zomat\PhpGenetics\EventBus;
 
-$gaBuilder = new GeneticsAlgorithmBuilder;
+$eventBus = new EventBus;
+
+$gaBuilder = new GeneticsAlgorithmBuilder($eventBus);
 
 $gaBuilder->setGenerationLimit(1000)
 ->setPopulationSize(10)
@@ -46,3 +49,7 @@ echo "Result population: " . PHP_EOL;
 echo $result->itemNames . PHP_EOL;
 echo " => Fitness: " . $result->fitness . PHP_EOL;
 echo " => Generation: " . $result->generation . PHP_EOL;
+
+echo "<pre>";
+print_r($eventBus);
+echo "</pre>";

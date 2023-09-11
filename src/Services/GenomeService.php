@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Zomat\PhpGenetics\Services;
 
+use Zomat\PhpGenetics\Contracts\EventBusInterface;
 use Zomat\PhpGenetics\Contracts\GenomeServiceInterface;
 use Zomat\PhpGenetics\ValueObjects\Genome;
 use Zomat\PhpGenetics\ValueObjects\GenomePair;
@@ -12,6 +13,10 @@ final class GenomeService implements GenomeServiceInterface
 {
     private int $mutationLimit;
     private float $mutationProbability;
+
+    public function __construct(
+        private EventBusInterface $eventBus
+    ) {}
 
     public function setMutationLimit(int $mutationLimit): GenomeServiceInterface
     {

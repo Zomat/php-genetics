@@ -7,12 +7,13 @@ use Zomat\PhpGenetics\Services\GenomeService;
 use Zomat\PhpGenetics\ValueObjects\Genome;
 use Zomat\PhpGenetics\ValueObjects\GenomePair;
 use Zomat\PhpGenetics\ValueObjects\Item;
+use Zomat\PhpGenetics\EventBus;
 
 class GenomeServiceTest extends TestCase
 {
     public function testCreateGenomeWithRandomValues()
     {
-        $genomeService = new GenomeService();
+        $genomeService = new GenomeService(new EventBus);
         $genome = $genomeService->create(5);
 
         $this->assertInstanceOf(Genome::class, $genome);
@@ -21,7 +22,7 @@ class GenomeServiceTest extends TestCase
 
     public function testMutation()
     {
-        $genomeService = new GenomeService();
+        $genomeService = new GenomeService(new EventBus);
         $genome = new Genome([0, 1, 0, 1, 0]);
 
         $genomeService->setMutationLimit(2)->setMutationProbability(0.5);
@@ -32,7 +33,7 @@ class GenomeServiceTest extends TestCase
 
     public function testSinglePointCrossover()
     {
-        $genomeService = new GenomeService();
+        $genomeService = new GenomeService(new EventBus);
         $genome1 = new Genome([0, 1, 0, 1, 0]);
         $genome2 = new Genome([1, 0, 1, 0, 1]);
 
@@ -43,7 +44,7 @@ class GenomeServiceTest extends TestCase
 
     public function testToItemNames()
     {
-        $genomeService = new GenomeService();
+        $genomeService = new GenomeService(new EventBus);
         $genome = new Genome([1, 0, 1]);
 
         $items = [

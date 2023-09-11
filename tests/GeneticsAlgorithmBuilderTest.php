@@ -5,13 +5,14 @@ declare(strict_types=1);
 use PHPUnit\Framework\TestCase;
 use Zomat\PhpGenetics\GeneticsAlgorithmBuilder;
 use Zomat\PhpGenetics\ValueObjects\Item;
+use Zomat\PhpGenetics\EventBus;
 
 class GeneticsAlgorithmBuilderTest extends TestCase
 {
     public function testBuild()
     {
         // Create an instance of GeneticsAlgorithmBuilder
-        $builder = new GeneticsAlgorithmBuilder();
+        $builder = new GeneticsAlgorithmBuilder(new EventBus);
 
         // Set values for the builder's properties
         $builder->setGenerationLimit(100)
@@ -30,7 +31,7 @@ class GeneticsAlgorithmBuilderTest extends TestCase
     public function testBuildWithMissingWeightLimit()
     {
         // Create an instance of GeneticsAlgorithmBuilder
-        $builder = new GeneticsAlgorithmBuilder();
+        $builder = new GeneticsAlgorithmBuilder(new EventBus);
 
         // Set other required properties but omit weightLimit
         $builder->setGenerationLimit(100)
@@ -46,7 +47,7 @@ class GeneticsAlgorithmBuilderTest extends TestCase
     public function testBuildWithMutationLimitGreaterThanItemCount()
     {
         // Create an instance of GeneticsAlgorithmBuilder
-        $builder = new GeneticsAlgorithmBuilder();
+        $builder = new GeneticsAlgorithmBuilder(new EventBus);
 
         // Set required properties and a mutation limit higher than item count
         $builder->setGenerationLimit(100)
@@ -64,7 +65,7 @@ class GeneticsAlgorithmBuilderTest extends TestCase
     public function testBuildWithInvalidMutationProbability()
     {
         // Create an instance of GeneticsAlgorithmBuilder
-        $builder = new GeneticsAlgorithmBuilder();
+        $builder = new GeneticsAlgorithmBuilder(new EventBus);
 
         // Set required properties and an invalid mutation probability
         $builder->setGenerationLimit(100)
@@ -82,7 +83,7 @@ class GeneticsAlgorithmBuilderTest extends TestCase
     public function testBuildWithEmptyItems()
     {
         // Create an instance of GeneticsAlgorithmBuilder
-        $builder = new GeneticsAlgorithmBuilder();
+        $builder = new GeneticsAlgorithmBuilder(new EventBus);
 
         // Set required properties but omit items
         $builder->setGenerationLimit(100)

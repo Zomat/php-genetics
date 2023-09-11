@@ -6,6 +6,7 @@ use PHPUnit\Framework\TestCase;
 use Zomat\PhpGenetics\Services\FitnessService;
 use Zomat\PhpGenetics\ValueObjects\Genome;
 use Zomat\PhpGenetics\ValueObjects\Item;
+use Zomat\PhpGenetics\EventBus;
 
 class FitnessServiceTest extends TestCase
 {
@@ -17,7 +18,7 @@ class FitnessServiceTest extends TestCase
             new Item("item3", 3, 4),
         ];
 
-        $fitnessService = new FitnessService();
+        $fitnessService = new FitnessService(new EventBus);
         $fitnessService->setItems($items)->setWeightLimit(5);
 
         $genome = new Genome([1, 1, 0]);
@@ -37,7 +38,7 @@ class FitnessServiceTest extends TestCase
     {
         $items = [];
 
-        $fitnessService = new FitnessService();
+        $fitnessService = new FitnessService(new EventBus);
         $fitnessService->setItems($items)->setWeightLimit(0);
 
         $genome = new Genome([1, 0, 1]);
@@ -55,7 +56,7 @@ class FitnessServiceTest extends TestCase
             new Item("item3", 3, 4),
         ];
 
-        $fitnessService = new FitnessService();
+        $fitnessService = new FitnessService(new EventBus);
         $fitnessService->setItems($items)->setWeightLimit(5);
 
         $genome = new Genome([1, 0]);
