@@ -27,7 +27,7 @@ final class SelectionService implements SelectionServiceInterface
 
         do {
             $index2 = $this->getBucketFromWeights($weights);
-        } while ($index1 != $index2);
+        } while ($index1 == $index2);
        
         return new GenomePair(
             $population->genomes[$index1],
